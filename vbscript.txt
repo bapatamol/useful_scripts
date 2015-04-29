@@ -1,0 +1,26 @@
+Sub TextToLink()
+  Dim reg As New RegExp
+  reg.Pattern = "(ABCD-\d{4})/" 'replace regular expression for finding a string pattern
+  reg.Global = True
+  Application.ActiveInspector.CurrentItem.HTMLBody = reg.Replace(Application.ActiveInspector.CurrentItem.HTMLBody, "<a href=""http://LINKTEXT/$1"">$1</a>") 'replace LINKTEXT with link base
+
+End Sub
+
+Sub TellMeIfAppNameInMail()
+  Dim regName As New RegExp
+  Dim Matches
+  
+  regName.Pattern = "Amol Bapat"
+  regName.Global = False 'True if needed
+      
+  Set Matches = regFBName.Execute(Application.ActiveInspector.CurrentItem.HTMLBody)
+  
+  If Matches.Count > 0 Then
+    MsgBox "String present in email
+  Else
+    MsgBox "No String present"
+  End If
+  
+End Sub
+
+
