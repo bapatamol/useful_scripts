@@ -1,0 +1,89 @@
+Private Function CreateIndividualReminder(appointmentDate, subject)
+  
+    Dim appOL As Object
+    Dim objReminder As Object
+ 
+    Set appOL = GetObject(, "Outlook.application")
+    Set objReminder = appOL.CreateItem(1) ' olAppointmentItem
+   
+    If (Weekday(appointmentDate) = 1) Then
+        appointmentDate = DateAdd("d", 1, appointmentDate)
+    End If
+   
+    If (Weekday(appointmentDate) = 7) Then
+        appointmentDate = DateAdd("d", -1, appointmentDate)
+    End If
+   
+    appointmentDate = DateAdd("h", 9, appointmentDate)
+    objReminder.Start = appointmentDate
+    objReminder.subject = subject
+    objReminder.BusyStatus = olFree
+    objReminder.Categories = "Purple Category"
+   
+    objReminder.Save
+   
+End Function
+ 
+Sub CreateReleaseReminders()
+    Dim userInputReleaseDate As String
+    Dim userInputReleaseName As String
+    Dim day As Integer
+    Dim month As Integer
+    Dim year As Integer
+   
+    
+    Dim releaseDate As Date
+A:  userInputReleaseDate = InputBox("Enter release date (MM-DD-YYYY)")
+    If userInputReleaseDate = "" Then
+        Exit Sub
+    End If
+   
+    If IsDate(userInputReleaseDate) Then
+        month = CInt(Mid(userInputReleaseDate, 1, 2))
+        day = CInt(Mid(userInputReleaseDate, 4, 2))
+        year = CInt(Mid(userInputReleaseDate, 7, 4))
+        releaseDate = DateSerial(year, month, day)
+    Else
+        MsgBox ("Please enter valid date")
+        GoTo A
+    End If
+   
+    If MsgBox("Are you sure you want release date as: " + userInputReleaseDate, vbYesNo) = vbNo Then
+        GoTo A
+    End If
+   
+B:  userInputReleaseName = InputBox("Enter release name")
+    If userInputReleaseName = "" Then
+        Exit Sub
+    End If
+   
+    If MsgBox("Are you sure you want release name as: " + userInputReleaseName, vbYesNo) = vbNo Then
+        GoTo B
+    End If
+   
+        
+    Call CreateIndividualReminder(DateAdd("d", -10, releaseDate), userInputReleaseName + " - Code submitted for Secure Code review")
+    Call CreateIndividualReminder(DateAdd("d", -2, releaseDate), userInputReleaseName + " - Zero Critical and High priority defects open")
+    Call CreateIndividualReminder(DateAdd("d", 0, releaseDate), userInputReleaseName + " - For all open defects, documentation and Risk in analyzed")
+    Call CreateIndividualReminder(DateAdd("d", -5, releaseDate), userInputReleaseName + " - Feature / Stories / defects verified and accepted by Business before release")
+    Call CreateIndividualReminder(DateAdd("d", -15, releaseDate), userInputReleaseName + " - For major changes to Security or overall design, request for PenTest")
+    Call CreateIndividualReminder(DateAdd("d", -5, releaseDate), userInputReleaseName + " - Creative QA testing + Regression")
+    Call CreateIndividualReminder(DateAdd("d", -10, releaseDate), userInputReleaseName + " - Release plan reviewed with the Product owners, SMs and Dev managers")
+    Call CreateIndividualReminder(DateAdd("d", -5, releaseDate), userInputReleaseName + " - Compile list of all DB and Infra / Config changes")
+    Call CreateIndividualReminder(DateAdd("d", -5, releaseDate), userInputReleaseName + " - Deploy UAT build")
+    Call CreateIndividualReminder(DateAdd("d", -5, releaseDate), userInputReleaseName + " - e-Review")
+    Call CreateIndividualReminder(DateAdd("d", -2, releaseDate), userInputReleaseName + " - Sign off received for UAT")
+    Call CreateIndividualReminder(DateAdd("d", -2, releaseDate), userInputReleaseName + " - BAT sign off received (if applicable)")
+    Call CreateIndividualReminder(DateAdd("d", -10, releaseDate), userInputReleaseName + " - Change Tickets opened")
+    Call CreateIndividualReminder(DateAdd("d", 0, releaseDate), userInputReleaseName + " - Supporting infra changes scheduled prior or day of install")
+    Call CreateIndividualReminder(DateAdd("d", -10, releaseDate), userInputReleaseName + " - DBA support requested (if needed for the release)")
+    Call CreateIndividualReminder(DateAdd("d", -2, releaseDate), userInputReleaseName + " - Go No Go Decision")
+    Call CreateIndividualReminder(DateAdd("d", -5, releaseDate), userInputReleaseName + " - Resources identified for prod validation and support")
+    Call CreateIndividualReminder(DateAdd("d", -2, releaseDate), userInputReleaseName + " - Detailed install plan ready and reviewed")
+    Call CreateIndividualReminder(DateAdd("d", -2, releaseDate), userInputReleaseName + " - Meeting invite for the Install day / night")
+    Call CreateIndividualReminder(DateAdd("d", 0, releaseDate), userInputReleaseName + " - Install Co-ordination")
+    Call CreateIndividualReminder(DateAdd("d", 1, releaseDate), userInputReleaseName + " - Triage of items post prod deployment")
+    Call CreateIndividualReminder(DateAdd("d", 5, releaseDate), userInputReleaseName + " - Release retrospective / Lessons learned")
+ 
+    MsgBox ("Release reminders set!")
+End Sub
